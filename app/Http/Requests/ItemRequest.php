@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ItemRequest extends FormRequest
 {
@@ -22,8 +23,8 @@ class ItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'     => 'required|unique:name|max:255',
-            'quantity' => 'required|integer|min:1|max:'
+            'name' => 'required|max:255|unique:items,name,' . $this->route('item'),
+            'quantity' => 'required|integer|min:1'
         ];
     }
 }

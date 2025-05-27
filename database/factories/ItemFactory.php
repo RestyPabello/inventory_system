@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Item;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,9 +18,9 @@ class ItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
+            'name'        => $this->faker->word(),
             'description' => $this->faker->sentence(),
-            'quantity' => $this->faker->numberBetween(50,100)
+            'quantity'    => $this->faker->numberBetween(50,100)
         ];
     }
 }

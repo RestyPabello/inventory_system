@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Request\FormRequest\ItemRequest;
+use App\Http\Requests\ItemRequest;
 use App\Http\Resources\ItemResource;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ItemController extends Controller
 {
@@ -14,25 +15,51 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::all();
+        try {
+            $items = Item::paginate(10);
 
-        return ItemResource::collection($items);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+            return response()->json([
+                'status_code' => 200,
+                'message'     => 'Successful',
+                'data'        => ItemResource::collection($items)
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json(
+                [
+                    'status_code' => 400,
+                    'message'     => $e->getMessage(),
+                ],
+                400
+            );
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ItemRequest $request)
     {
-        //
+        try {
+            $item = Item::create([
+                'name'        => $request->name,
+                'description' => $request->description,
+                'quantity'    => $request->quantity
+            ]);
+
+            return response()->json([
+                'status_code' => 200,
+                'message'     => 'Successful',
+                'data'        => $item
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json(
+                [
+                    'status_code' => 400,
+                    'message'     => $e->getMessage(),
+                ],
+                400
+            );
+        }
     }
 
     /**
@@ -40,23 +67,45 @@ class ItemController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
+        try {
+            $item = Item::findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Item found',
+                'data' => $item
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status_code' => 404,
+                'message' => 'Item not found with ID ' . $id,
+            ], 404);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ItemRequest $request, string $id)
     {
-        //
+        try {
+            $item = Item::findOrFail($id);
+            $item->update([
+                'name'        => $request->name,
+                'description' => $request->description,
+                'quantity'    => $request->quantity
+            ]);
+
+            return response()->json([
+                'status_code' => 200,
+                'message'     => 'Item has been successfully updated',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status_code' => 404,
+                'message' => 'Item not found with ID ' . $id,
+            ], 404);
+        }
     }
 
     /**
@@ -64,6 +113,19 @@ class ItemController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $item = Item::findOrFail($id);
+            $item->delete();
+          
+            return response()->json([
+                'status_code' => 200,
+                'message'     => 'Item has been successfully deleted',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status_code' => 404,
+                'message' => 'Item not found with ID ' . $id,
+            ], 404);
+        }
     }
 }

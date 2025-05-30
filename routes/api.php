@@ -4,8 +4,7 @@ use App\Http\Controllers\Itemcontroller;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Laravel\Passport\Passport;
-
+use Illuminate\Support\Facades\Http;
 
 Route::middleware('auth:api')->group( function () {
     Route::apiResource('items', ItemController::class);

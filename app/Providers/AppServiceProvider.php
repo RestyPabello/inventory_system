@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Carbon\CarbonInterval;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Passport::tokensExpireIn(CarbonInterval::minutes(15));
     }
 
     /**
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Passport::enablePasswordGrant();
+        Passport::tokensExpireIn(CarbonInterval::days(1));
     }
 }

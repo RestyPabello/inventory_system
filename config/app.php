@@ -52,7 +52,8 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url'          => env('APP_URL', 'http://localhost'),
+    'passport_url' => env('PASSPORT_URL', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------

@@ -19,4 +19,9 @@ class Item extends Model
             'quantity' => 'integer'
         ];
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

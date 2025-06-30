@@ -1,33 +1,31 @@
 <?php
 
-namespace App\Http\Controllers\Roles;
+namespace App\Http\Controllers\Permissions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Roles\RoleRequest;
-use App\Http\Resources\Roles\RoleResource;
-use App\Services\Roles\RoleApi;
+use App\Http\Resources\Permissions\PermissionResource;
+use App\Http\Requests\Permissions\PermissionRequest;
+use App\Services\Permissions\PermissionApi;
 use Illuminate\Http\Request;
 
-
-class RoleController extends Controller
+class PermissionController extends Controller
 {
+    protected $permissionApi;
 
-    protected $roleApi;
-
-    public function __construct(RoleApi $roleApi)
+    public function __construct(PermissionApi $permissionApi) 
     {
-        $this->roleApi = $roleApi;
+        $this->permissionApi = $permissionApi;
     }
 
     public function index(Request $request)
     {
         try {
-            $result = $this->roleApi->getAllRoles($request);
+            $result = $this->permissionApi->getAllPermissions($request);
 
             return response()->json([
                 'status_code' => 200,
                 'message'     => 'Successful',
-                'data'        => RoleResource::collection($result),
+                'data'        => PermissionResource::collection($result),
                 'pagination'  => [
                     'current_page'   => $result->currentPage(),
                     'last_page'      => $result->lastPage(),
@@ -46,17 +44,17 @@ class RoleController extends Controller
         }
     }
 
-    public function store(RoleRequest $request)
+    public function store(PermissionRequest $request)
     {
         try {
-            $result = $this->roleApi->createRole($request);
+            $result = $this->permissionApi->createPermission($request);
 
             return response()->json([
-                'status_code' => 201,
+                'status_code' => 200,
                 'message'     => 'Successful',
-                'data'        => new RoleResource($result)
-            ], 201);
-        } catch (\Throwable $e) {
+                'data'        => new PermissionResource($result)
+            ]);
+        } catch(\Throwable $e) {
             return response()->json([
                 'status_code' => 400,
                 'message'     => $e->getMessage(),
@@ -64,16 +62,17 @@ class RoleController extends Controller
         }
     }
 
-    public function update(RoleRequest $request, $id)
+    public function update(PermissionRequest $request, $id)
     {
-        try {
-            $result = $this->roleApi->updateRole($request, $id);
+         try {
+            $result = $this->permissionApi->updatePermission($request, $id);
 
             return response()->json([
                 'status_code' => 200,
-                'message'     => 'The role has been successfully updated'
+                'message'     => 'Successful',
+                'message'     => 'The permission has been successfully updated'
             ]);
-        } catch (\Throwable $e) {
+        } catch(\Throwable $e) {
             return response()->json([
                 'status_code' => 400,
                 'message'     => $e->getMessage(),
@@ -81,4 +80,3 @@ class RoleController extends Controller
         }
     }
 }
-

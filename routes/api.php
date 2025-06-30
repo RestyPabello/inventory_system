@@ -3,6 +3,7 @@
 use App\Http\Controllers\Items\ItemController;
 use App\Http\Controllers\Categories\CategoryController;
 use App\Http\Controllers\Roles\RoleController;
+use App\Http\Controllers\Permissions\PermissionController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('items', ItemController::class);
         Route::apiResource('roles', RoleController::class);
+        Route::apiResource('permissions', PermissionController::class);
 
         Route::get('/user', function (Request $request) {
             return $request->user();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistrationRequest;
+use App\Services\Auths\AuthApi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,19 +14,22 @@ use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
+    protected $authApi;
+
+    public function __construct(AuthApi $authApi)
+    {
+        $this->authApi = $authApi;
+    }
+
     public function register(RegistrationRequest $request) 
     {
         try {
-            $newUser = User::create([
-                'name'             => $request->name,
-                'email'            => $request->email,
-                'password'         => Hash::make($request->password)
-            ]);
+            $result = $this->authApi->createUser($request);
 
             return response()->json([
                 'status_code' => 201,
                 'message'     => 'Successful',
-                'data'        => new UserResource($newUser)
+                'data'        => new UserResource($result)
             ]);
         } catch (\Throwable $e) {
             return response()->json(

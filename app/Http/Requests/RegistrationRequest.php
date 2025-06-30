@@ -31,7 +31,10 @@ class RegistrationRequest extends FormRequest
                 'max:24',   
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,24}$/',
             ],
-            'confirm_password' => 'required|string|min:8|same:password'
+            'confirm_password' => 'required|string|min:8|same:password',
+            'role_id'          => 'required|exists:roles,id',
+            'permission_id'    => 'nullable|array',
+            'permission_id.*'  => 'exists:permissions,id',
         ];
     }
 }

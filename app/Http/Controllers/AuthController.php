@@ -26,6 +26,8 @@ class AuthController extends Controller
         try {
             $result = $this->authApi->createUser($request);
 
+            return $result;
+
             return response()->json([
                 'status_code' => 201,
                 'message'     => 'Successful',

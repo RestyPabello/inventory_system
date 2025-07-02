@@ -49,6 +49,30 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'user_roles');
+        return $this->belongsToMany(Role::class, 'user_roles')->withTimestamps();
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function hasRole(string $roleName): bool
+    {
+        return $this->roles->pluck('name')->contains($roleName);
+    }
+
+    public function hasPermission(string $permissionName): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->roles()
+            ->with('permissions')
+            ->get()
+            ->flatMap(fn($role) => $role->permissions)
+            ->pluck('name')
+            ->contains($permissionName);
     }
 }

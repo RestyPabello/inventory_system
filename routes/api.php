@@ -11,10 +11,13 @@ use Illuminate\Support\Facades\Http;
 
 Route::prefix('v1')->group(function () {
     Route::middleware('auth:api')->group( function () {
+        Route::middleware(['role:admin'])->group(function () {
+            Route::apiResource('roles', RoleController::class);
+            Route::apiResource('permissions', PermissionController::class);
+        });
+        
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('items', ItemController::class);
-        Route::apiResource('roles', RoleController::class);
-        Route::apiResource('permissions', PermissionController::class);
 
         Route::get('/user', function (Request $request) {
             return $request->user();

@@ -17,15 +17,13 @@ class ItemVariant extends Model
         'expires_at'
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'quantity' => 'integer'
-        ];
-    }
-
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function item_variant_stocks()
+    {
+        return $this->hasMany(ItemVariantStock::class);
     }
 }

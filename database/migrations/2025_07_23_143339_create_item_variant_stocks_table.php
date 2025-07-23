@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('item_variant_id')->constrained('item_variants')->onDelete('cascade');
             $table->integer('quantity');
+            $table->enum('status', ['available_stock', 'low_stock', 'out_of_stock'])->default('available_stock');
             $table->date('expires_at');
             $table->date('purchased_at')->nullable();
             $table->timestamps();

@@ -29,4 +29,9 @@ class Item extends Model
     {
         return $this->belongsTo(Unit::class);
     }
+
+    public function item_variants()
+    {
+        return $this->hasMany(ItemVariant::class);
+    }
 }

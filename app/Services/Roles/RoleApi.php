@@ -17,7 +17,7 @@ class RoleApi
     {
         $perPage = $request->get('per_page', 10); 
 
-        return $this->role->paginate($perPage);
+        return $this->role->with('permissions')->paginate($perPage);
     }
 
     public function createRole($request)

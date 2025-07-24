@@ -4,34 +4,36 @@ namespace App\Http\Controllers\Items;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ItemRequest;
-use App\Http\Resources\ItemResource;
+use App\Http\Resources\Items\ItemResource;
 use App\Models\Item;
+use App\Services\Items\ItemApi;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $itemApi;
+
+    public function __construct(ItemApi $itemApi)
+    {
+        $this->itemApi = $itemApi;
+    }
+
+    public function index(Request $request)
     {
         try {
-            $items = Item::paginate(10);
+            $result = $this->itemApi->getAllItems($request);
 
             return response()->json([
                 'status_code' => 200,
                 'message'     => 'Successful',
-                'data'        => ItemResource::collection($items)
+                'data'        => $result,
             ]);
-        } catch (\Throwable $e) {
-            return response()->json(
-                [
-                    'status_code' => 400,
-                    'message'     => $e->getMessage(),
-                ],
-                400
-            );
+        } catch(\Throwable $e) {
+            return response()->json([
+                'status_code' => 400,
+                'message'     => $e->getMessage(),
+            ], 400);
         }
     }
 

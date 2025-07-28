@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Categories;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Categories\CategoryResource;
+use App\Http\Requests\Categories\CategoryRequest;
 use App\Services\Categories\CategoryApi;
 use Illuminate\Http\Request;
 
@@ -36,13 +37,45 @@ class CategoryController extends Controller
                 ],
             ]);
         } catch (\Throwable $e) {
-            return response()->json(
-                [
-                    'status_code' => 400,
-                    'message'     => $e->getMessage(),
-                ],
-                400
-            );
+            return response()->json([
+                'status_code' => 400,
+                'message'     => $e->getMessage(),
+            ], 400);
+        }
+    }
+    
+    public function store(CategoryRequest $request)
+    {
+        try {
+            $result = $this->categoryApi->createCategory($request);
+
+            return response()->json([
+                'status_code' => 201,
+                'message'     => 'Successful',
+                'data'        => new CategoryResource($result)
+            ], 201);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status_code' => 400,
+                'message'     => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function update(CategoryRequest $request, $id)
+    {
+        try {
+            $result = $this->categoryApi->updateCategory($request, $id);
+
+            return response()->json([
+                'status_code' => 201,
+                'message'     => 'The category has been successfully updated'
+            ], 201);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status_code' => 400,
+                'message'     => $e->getMessage(),
+            ], 400);
         }
     }
 }

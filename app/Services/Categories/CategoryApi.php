@@ -19,4 +19,24 @@ class CategoryApi
 
         return $this->category->paginate($perPage);
     }
+
+    public function createCategory($request)
+    {
+        return $this->category->create([
+            'name'        => $request->name,
+            'description' => $request->description,
+            'parent_id'   => $request->parent_id ?? null
+        ]);
+    }
+
+    public function updateCategory($request, $id)
+    {
+        $category = $this->category->findOrFail($id);
+
+        return $category->update([
+            'name'        => $request->name,
+            'description' => $request->description,
+            'parent_id'   => $request->parent_id ?? null
+        ]);
+    }
 }

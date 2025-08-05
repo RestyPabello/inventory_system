@@ -19,4 +19,22 @@ class UnitApi
 
         return $this->unit->paginate($perPage);
     }
+
+    public function createUnit($request)
+    {
+        return $this->unit->create([
+            'name'        => $request->name,
+            'description' => $request->description
+        ]);
+    }
+
+    public function updateUnit($request, $id)
+    {
+        $unit = $this->unit->findOrFail($id);
+
+        return $unit->update([
+            'name'        => $request->name,
+            'description' => $request->description
+        ]);
+    }
 }

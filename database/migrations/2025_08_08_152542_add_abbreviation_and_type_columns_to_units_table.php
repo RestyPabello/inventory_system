@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('units', function (Blueprint $table) {
             $table->after('description', function (Blueprint $table) {
-                $table->string('abbreviation', 8);
-                $table->string('type', 50);
+                $table->string('abbreviation', 10)->nullable();
+                $table->string('type', 50)->index();
 
             });
         });

@@ -22,7 +22,7 @@ class ItemVariant extends Model
         return $this->belongsTo(Item::class);
     }
 
-    public function item_variant_stocks()
+    public function itemVariantStocks()
     {
         return $this->hasMany(ItemVariantStock::class);
     }

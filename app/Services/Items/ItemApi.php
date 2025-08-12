@@ -3,6 +3,8 @@
 namespace App\Services\Items;
 
 use App\Models\Item;
+use App\Models\ItemVariant;
+use App\Models\ItemVariantStock;
 use Illuminate\Support\Facades\DB;
 
 class ItemApi
@@ -11,7 +13,9 @@ class ItemApi
 
     public function __construct(Item $item)
     {
-        $this->item = $item;
+        $this->item             = $item;
+        $this->itemVariant      = $itemVariant;
+        $this->itemVariantStock = $itemVariantStock;
     }
 
     public function getAllItems($request)
@@ -38,5 +42,31 @@ class ItemApi
                 'ivs.purchased_at'
             )
             ->paginate($perPage);
+    }
+
+    public function createItem($request)
+    {
+        $item = $this->item->create([
+            'name'        => $request->name,
+            'unit_id'     => $request->unit_id,
+            'category_id' => $request->category_id
+        ]);
+
+        $itemVariant = $item->itemVariant->create([
+            // 'item_id'     => $item->id,
+            'image'       => $request->image,
+            'description' => $request->description,
+            'price'       => $request->price
+        ]);
+
+        $itemVariantStocks = $itemVariant->itemVariantStocks()->create([
+            // 'item_variant_id' => $itemVariant->id,
+            'quantity'    => $request->quantity,
+            'status'      => $request->status,
+            'expires_at'  => $request->expires_at,
+            'purchased_at' => $request->purchased_at ?? null
+        ]);
+
+        return $item->load('itemVariants.itemVariantStocks');
     }
 }

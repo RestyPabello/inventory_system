@@ -13,7 +13,7 @@ class ItemVariantStock extends Model
         ];
     }
 
-    public function variant()
+    public function itemVariant()
     {
         return $this->belongsTo(ItemVariant::class);
     }

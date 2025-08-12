@@ -43,26 +43,42 @@ class ItemController extends Controller
     public function store(ItemRequest $request)
     {
         try {
-            $item = Item::create([
-                'name'        => $request->name,
-                'description' => $request->description,
-                'quantity'    => $request->quantity
-            ]);
+            $result = $this->itemApi->createItem($request);
 
             return response()->json([
-                'status_code' => 200,
+                'status_code' => 201,
                 'message'     => 'Successful',
-                'data'        => $item
-            ]);
+                'data'        => $result
+            ], 201);
         } catch (\Throwable $e) {
-            return response()->json(
-                [
-                    'status_code' => 400,
-                    'message'     => $e->getMessage(),
-                ],
-                400
-            );
+            return response()->json([
+                'status_code' => 400,
+                'message'     => $e->getMessage(),
+            ], 400);
         }
+
+
+        // try {
+        //     $item = Item::create([
+        //         'name'        => $request->name,
+        //         'description' => $request->description,
+        //         'quantity'    => $request->quantity
+        //     ]);
+
+        //     return response()->json([
+        //         'status_code' => 200,
+        //         'message'     => 'Successful',
+        //         'data'        => $item
+        //     ]);
+        // } catch (\Throwable $e) {
+        //     return response()->json(
+        //         [
+        //             'status_code' => 400,
+        //             'message'     => $e->getMessage(),
+        //         ],
+        //         400
+        //     );
+        // }
     }
 
     /**

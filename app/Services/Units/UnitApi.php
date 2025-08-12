@@ -23,8 +23,10 @@ class UnitApi
     public function createUnit($request)
     {
         return $this->unit->create([
-            'name'        => $request->name,
-            'description' => $request->description
+            'name'         => $request->name,
+            'description'  => $request->description,
+            'abbreviation' => $request->abbreviation,
+            'type'         => $request->type
         ]);
     }
 
@@ -33,8 +35,10 @@ class UnitApi
         $unit = $this->unit->findOrFail($id);
 
         return $unit->update([
-            'name'        => $request->name,
-            'description' => $request->description
+            'name'         => $request->name,
+            'description'  => $request->description,
+            'abbreviation' => $request->abbreviation,
+            'type'         => $request->type
         ]);
     }
 }

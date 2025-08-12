@@ -30,7 +30,7 @@ class Item extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    public function item_variants()
+    public function itemVariants()
     {
         return $this->hasMany(ItemVariant::class);
     }

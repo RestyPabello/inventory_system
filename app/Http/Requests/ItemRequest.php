@@ -23,7 +23,7 @@ class ItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:255|unique:items,name,' . $this->route('item'),
+            // 'name' => 'required|max:255|unique:items,name,' . $this->route('item'),
             'quantity' => 'required|integer|min:1'
         ];
     }

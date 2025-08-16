@@ -10,11 +10,11 @@ class ItemVariant extends Model
 
     protected $fillable = [
         'item_id',
-        'name', 
-        'description', 
-        'price',
-        'quantity',
-        'expires_at'
+        'unit_id', 
+        'value',
+        'image', 
+        'description',
+        'price'
     ];
 
     public function item()

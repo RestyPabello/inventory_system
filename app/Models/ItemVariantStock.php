@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ItemVariantStock extends Model
 {
+    protected $fillable = [
+        'item_variant_id',
+        'quantity', 
+        'status',
+        'expires_at', 
+        'purchased_at'
+    ];
+
     protected function casts(): array
     {
         return [

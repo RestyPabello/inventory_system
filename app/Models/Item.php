@@ -11,7 +11,12 @@ class Item extends Model
 
     protected $table = 'items';
 
-    protected $fillable = ['name', 'description', 'quantity'];
+    protected $fillable = [
+        'name', 
+        'brand', 
+        'description', 
+        'category_id'
+    ];
 
     protected function casts(): array
     {

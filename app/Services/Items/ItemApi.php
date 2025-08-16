@@ -11,7 +11,11 @@ class ItemApi
 {
     protected $item;
 
-    public function __construct(Item $item)
+    public function __construct(
+        Item $item,
+        ItemVariant $itemVariant,
+        ItemVariantStock $itemVariantStock
+    )
     {
         $this->item             = $item;
         $this->itemVariant      = $itemVariant;
@@ -46,27 +50,27 @@ class ItemApi
 
     public function createItem($request)
     {
-        $item = $this->item->create([
-            'name'        => $request->name,
-            'unit_id'     => $request->unit_id,
-            'category_id' => $request->category_id
-        ]);
+        $item = $this->item->firstOrCreate(
+            ['name' => $request->name],
+            [
+                'brand'       => $request->brand ?? null,
+                'description' => $request->item_description,
+                'category_id' => $request->category_id
+            ]
+        );
 
-        $itemVariant = $item->itemVariant->create([
-            // 'item_id'     => $item->id,
-            'image'       => $request->image,
-            'description' => $request->description,
-            'price'       => $request->price
-        ]);
+        $itemVariant = $item->itemVariants()->firstOrCreate(
+            [
+                'unit_id' => $request->unit_id,
+                'value'   => $request->value,
+            ],
+            [
+                'image'       => $request->image ?? null,
+                'description' => $request->item_variant_description,
+                'price'       => $request->price
+            ]
+        );
 
-        $itemVariantStocks = $itemVariant->itemVariantStocks()->create([
-            // 'item_variant_id' => $itemVariant->id,
-            'quantity'    => $request->quantity,
-            'status'      => $request->status,
-            'expires_at'  => $request->expires_at,
-            'purchased_at' => $request->purchased_at ?? null
-        ]);
-
-        return $item->load('itemVariants.itemVariantStocks');
+        return $item->load('itemVariants');
     }
 }

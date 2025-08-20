@@ -23,8 +23,17 @@ class ItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'name' => 'required|max:255|unique:items,name,' . $this->route('item'),
-            'quantity' => 'required|integer|min:1'
+            'name'                     => 'required|string|max:255',
+            'brand'                    => 'nullable|string|max:255',
+            'item_description'         => 'nullable|string',
+            'category_id'              => 'required|exists:categories,id',
+            'unit_id'                  => 'required|exists:units,id',
+            'value'                    => 'required',
+            'price'                    => 'required|decimal:0,2|min:0',
+            'item_variant_description' => 'nullable|string',
+            'quantity'                 => 'required|integer|min:1',
+            'status'                   => 'required',
+            'expires_at'               => 'required|date|after:today'
         ];
     }
 }

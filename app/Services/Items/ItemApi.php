@@ -51,32 +51,72 @@ class ItemApi
     public function createItem($request)
     {
         $item = $this->item->firstOrCreate([
-            'name' => $request->name 
-        ], [
-            'brand'       => $request->brand ?? null,
-            'description' => $request->item_description,
-            'category_id' => $request->category_id
-        ]);
+                'name' => $request->name 
+            ], [
+                'brand'       => $request->brand ?? null,
+                'description' => $request->item_description,
+                'category_id' => $request->category_id
+            ]);
 
         $itemVariant = $item->itemVariants()->firstOrCreate([
-            'unit_id' => $request->unit_id,
-            'value'   => $request->value,
-        ], [
-            'image'       => $request->image ?? null,
-            'description' => $request->item_variant_description,
-            'price'       => $request->price
-        ]);
+                'unit_id' => $request->unit_id,
+                'value'   => $request->value,
+            ], [
+                'image'       => $request->image ?? null,
+                'description' => $request->item_variant_description,
+                'price'       => $request->price
+            ]);
 
         $itemVariantStock = $itemVariant->itemVariantStocks()->updateOrCreate([
-            'item_variant_id' => $itemVariant->id,
-            'expires_at'      => $request->expires_at
-        ], [
-            'quantity'     => $request->quantity,
-            'status'       => $request->status,
-            'expires_at'   => $request->expires_at,
-            'purchased_at' => $request->purchase_at ?? null
-        ]);
+                'item_variant_id' => $itemVariant->id,
+                'expires_at'      => $request->expires_at
+            ], [
+                'quantity'     => $request->quantity,
+                'status'       => $request->status,
+                'expires_at'   => $request->expires_at,
+                'purchased_at' => $request->purchase_at ?? null
+            ]);
 
         return $item->load('itemVariants.itemVariantStocks');
+    }
+
+    public function updateItem($request, $id)
+    {
+        return DB::transaction(function () use ($request, $id) {
+
+            $item = $this->item->findOrFail($id);
+
+            $item->update([
+                'name'        => $request->name,
+                'brand'       => $request->brand ?? null,
+                'description' => $request->item_description,
+                'category_id' => $request->category_id,
+            ]);
+
+            $itemVariant = $item->itemVariants()
+                ->where('unit_id', $request->unit_id)
+                ->where('value', $request->value)
+                ->update([
+                    'image'       => $request->image ?? null,
+                    'description' => $request->item_variant_description,
+                    'price'       => $request->price
+                ]);
+
+            $itemVariant = $item->itemVariants()
+                ->where('unit_id', $request->unit_id)
+                ->where('value', $request->value)
+                ->firstOrFail();
+
+            $itemVariant->itemVariantStocks()
+                ->where('expires_at', $request->expires_at)
+                ->update([
+                    'quantity'     => $request->quantity,
+                    'status'       => $request->status,
+                    'expires_at'   => $request->expires_at,
+                    'purchased_at' => $request->purchase_at ?? null
+                ]);
+
+            return $item->load('itemVariants.itemVariantStocks');
+        });
     }
 }

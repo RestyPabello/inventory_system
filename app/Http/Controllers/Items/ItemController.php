@@ -37,9 +37,6 @@ class ItemController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ItemRequest $request)
     {
         try {
@@ -56,80 +53,26 @@ class ItemController extends Controller
                 'message'     => $e->getMessage(),
             ], 400);
         }
-
-
-        // try {
-        //     $item = Item::create([
-        //         'name'        => $request->name,
-        //         'description' => $request->description,
-        //         'quantity'    => $request->quantity
-        //     ]);
-
-        //     return response()->json([
-        //         'status_code' => 200,
-        //         'message'     => 'Successful',
-        //         'data'        => $item
-        //     ]);
-        // } catch (\Throwable $e) {
-        //     return response()->json(
-        //         [
-        //             'status_code' => 400,
-        //             'message'     => $e->getMessage(),
-        //         ],
-        //         400
-        //     );
-        // }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, $id)
     {
         try {
-            $item = Item::findOrFail($id);
+            $result = $this->itemApi->updateItem($request, $id);
 
             return response()->json([
                 'status_code' => 200,
-                'message' => 'Item found',
-                'data' => $item
-            ]);
-        } catch (ModelNotFoundException $e) {
+                'message'     => 'The item has been successfully updated',
+                'data'        => $result
+            ], 200);
+        } catch (\Throwable $e) {
             return response()->json([
-                'status_code' => 404,
-                'message' => 'Item not found with ID ' . $id,
-            ], 404);
+                'status_code' => 400,
+                'message'     => $e->getMessage(),
+            ], 400);
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(ItemRequest $request, string $id)
-    {
-        try {
-            $item = Item::findOrFail($id);
-            $item->update([
-                'name'        => $request->name,
-                'description' => $request->description,
-                'quantity'    => $request->quantity
-            ]);
-
-            return response()->json([
-                'status_code' => 200,
-                'message'     => 'Item has been successfully updated',
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'status_code' => 404,
-                'message' => 'Item not found with ID ' . $id,
-            ], 404);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         try {
